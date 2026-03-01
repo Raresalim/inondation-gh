@@ -78,7 +78,6 @@ var map = L.map('map', {
 L.control.zoom({ position: 'topleft' }).addTo(map);
 L.control.locate({ locateOptions: { maxZoom: 19 } }).addTo(map);
 
-
 //////////////////// BASEMAPS ////////////////////
 
 // Google Road (غير افتراضي)
@@ -91,14 +90,15 @@ var googleSat = L.tileLayer(
     'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'
 ).addTo(map);
 
-
 //////////////////// WADI ////////////////////
 
 function style_wadi_2() {
     return {
-        color: 'rgba(8,131,255,1.0)',
-        weight: 1,
-        fillOpacity: 0
+        color: 'rgba(0,0,0,1)',           // الخط أسود
+        weight: 1.5,
+        fillColor: 'rgba(40,147,255,1)',  // التعبئة أزرق
+        fillOpacity: 0.7,
+        interactive: true
     };
 }
 
@@ -106,7 +106,6 @@ var wadiLayer = L.geoJson(json_wadi_2, {
     style: style_wadi_2,
     interactive: true
 }).addTo(map);
-
 
 //////////////////// FLOOD RASTER ////////////////////
 
@@ -119,7 +118,6 @@ var floodLayer = L.imageOverlay(
     'data/inondation_3.png',
     floodBounds
 ).addTo(map);
-
 
 //////////////////// LAYER CONTROL ////////////////////
 
@@ -134,7 +132,6 @@ L.control.layers(
     },
     { collapsed: true }
 ).addTo(map);
-
 
 //////////////////// LEGEND ////////////////////
 
