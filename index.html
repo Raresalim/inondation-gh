@@ -121,7 +121,7 @@ var legend = L.control({ position: 'bottomright' });
 legend.onAdd = function () {
     var div = L.DomUtil.create('div', 'legend');
 
-    div.innerHTML = "<b>تصنيف الفيضانات</b><br>";
+    div.innerHTML = "<b>Profondeur d’inondation (m)</b><br>";
 
     var grades = [0.0, 4.3, 8.5, 12.8];
     var colors = ['#e6f0fa', '#87cefa', '#4682b4', '#000080'];
@@ -141,3 +141,4 @@ legend.addTo(map);
 
 </body>
 </html>
+
