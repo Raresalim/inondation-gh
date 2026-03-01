@@ -23,15 +23,15 @@
 
         /* ===== Legend Style ===== */
         .legend {
-            font-size: 11px;          /* حجم الخط */
-            line-height: 16px;        /* تباعد الأسطر */
+            font-size: 11px;
+            line-height: 16px;
             color: #555;
             background: #fff;
             padding: 5px;
             border-radius: 5px;
             border: 1px solid #ccc;
             box-shadow: 0 0 15px rgba(0,0,0,0.2);
-            max-width: 140px;         /* يمنع تكبير الصندوق */
+            max-width: 140px;
         }
 
         .legend i {
@@ -47,6 +47,7 @@
 </head>
 
 <body>
+
 <div id="map"></div>
 
 <script src="js/qgis2web_expressions.js"></script>
@@ -62,27 +63,37 @@
 <script src="data/wadi_2.js"></script>
 
 <script>
-/* ================= Map ================= */
+
+//////////////////// MAP ////////////////////
+
 var map = L.map('map', {
     zoomControl: false,
     minZoom: 1,
     maxZoom: 28
-}).fitBounds([[32.443752643478824,3.5689177256500377],
-              [32.55140768439127,3.7965253040664284]]);
+}).fitBounds([
+    [32.443752643478824, 3.5689177256500377],
+    [32.55140768439127, 3.7965253040664284]
+]);
 
 L.control.zoom({ position: 'topleft' }).addTo(map);
 L.control.locate({ locateOptions: { maxZoom: 19 } }).addTo(map);
 
-/* ================= Basemaps ================= */
+
+//////////////////// BASEMAPS ////////////////////
+
+// Google Road (غير افتراضي)
 var googleRoad = L.tileLayer(
     'https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}'
-).addTo(map);
-
-var googleSat = L.tileLayer(
-    'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'
 );
 
-/* ================= Wadi Layer ================= */
+// Google Satellite (افتراضي)
+var googleSat = L.tileLayer(
+    'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'
+).addTo(map);
+
+
+//////////////////// WADI ////////////////////
+
 function style_wadi_2() {
     return {
         color: 'rgba(8,131,255,1.0)',
@@ -96,10 +107,12 @@ var wadiLayer = L.geoJson(json_wadi_2, {
     interactive: true
 }).addTo(map);
 
-/* ================= Flood Raster ================= */
+
+//////////////////// FLOOD RASTER ////////////////////
+
 var floodBounds = [
-    [32.37165228901085,3.0092579665506722],
-    [32.807760862073884,3.8873520774093535]
+    [32.37165228901085, 3.0092579665506722],
+    [32.807760862073884, 3.8873520774093535]
 ];
 
 var floodLayer = L.imageOverlay(
@@ -107,18 +120,28 @@ var floodLayer = L.imageOverlay(
     floodBounds
 ).addTo(map);
 
-/* ================= Layer Control ================= */
-L.control.layers(null, {
-    "Inondation": floodLayer,
-    "Wadi": wadiLayer,
-    "Google Satellite": googleSat,
-    "Google Road": googleRoad
-}, { collapsed: true }).addTo(map);
 
-/* ================= Legend ================= */
+//////////////////// LAYER CONTROL ////////////////////
+
+L.control.layers(
+    {
+        "Google Satellite": googleSat,
+        "Google Road": googleRoad
+    },
+    {
+        "Inondation": floodLayer,
+        "Wadi": wadiLayer
+    },
+    { collapsed: true }
+).addTo(map);
+
+
+//////////////////// LEGEND ////////////////////
+
 var legend = L.control({ position: 'bottomright' });
 
 legend.onAdd = function () {
+
     var div = L.DomUtil.create('div', 'legend');
 
     div.innerHTML = "<b>Profondeur d’inondation (m)</b><br>";
@@ -127,18 +150,21 @@ legend.onAdd = function () {
     var colors = ['#e6f0fa', '#87cefa', '#4682b4', '#000080'];
 
     for (var i = 0; i < grades.length; i++) {
+
         div.innerHTML +=
             '<i style="background:' + colors[i] + '"></i> ' +
             grades[i].toFixed(1) +
-            (grades[i + 1] ? ' – ' + grades[i + 1].toFixed(1) + '<br>' : '+');
+            (grades[i + 1]
+                ? ' – ' + grades[i + 1].toFixed(1) + '<br>'
+                : '+');
     }
 
     return div;
 };
 
 legend.addTo(map);
+
 </script>
 
 </body>
 </html>
-
