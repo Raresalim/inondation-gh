@@ -1,196 +1,209 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
 
-    <link rel="stylesheet" href="css/leaflet.css">
-    <link rel="stylesheet" href="css/L.Control.Layers.Tree.css">
-    <link rel="stylesheet" href="css/L.Control.Locate.min.css">
-    <link rel="stylesheet" href="css/qgis2web.css">
-    <link rel="stylesheet" href="css/fontawesome-all.min.css">
-    <link rel="stylesheet" href="css/leaflet.photon.css">
+<link rel="stylesheet" href="css/leaflet.css">
+<link rel="stylesheet" href="css/L.Control.Layers.Tree.css">
+<link rel="stylesheet" href="css/L.Control.Locate.min.css">
+<link rel="stylesheet" href="css/qgis2web.css">
+<link rel="stylesheet" href="css/fontawesome-all.min.css">
+<link rel="stylesheet" href="css/leaflet.photon.css">
 
-    <style>
-        html, body, #map {
-            width: 100%;
-            height: 100%;
-            padding: 0;
-            margin: 0;
-        }
+<style>
 
-        /* ===== Legend style الأساسي (يبقى كما هو) ===== */
-        .legend {
-            line-height: 18px;
-            color: #555;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            padding: 6px 8px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.2);
-            border-radius: 5px;
-            font-size: 12px;
-        }
-        .legend i {
-            width: 18px;
-            height: 18px;
-            float: left;
-            margin-right: 8px;
-            opacity: 0.7;
-        }
-    </style>
-    <title></title>
+html, body, #map {
+width: 100%;
+height: 100%;
+margin: 0;
+padding: 0;
+}
+
+/* ===== Legend صغير للهاتف ===== */
+
+.legend {
+line-height: 14px;
+color: #333;
+background: white;
+padding: 4px 6px;
+border-radius: 4px;
+box-shadow: 0 0 8px rgba(0,0,0,0.2);
+font-size: 10px;
+max-width: 140px;
+}
+
+.legend i {
+width: 12px;
+height: 12px;
+float: left;
+margin-right: 5px;
+opacity: 0.9;
+}
+
+</style>
 </head>
 
 <body>
+
 <div id="map"></div>
 
-<script src="js/qgis2web_expressions.js"></script>
 <script src="js/leaflet.js"></script>
 <script src="js/L.Control.Layers.Tree.min.js"></script>
 <script src="js/L.Control.Locate.min.js"></script>
-<script src="js/leaflet.rotatedMarker.js"></script>
-<script src="js/leaflet.pattern.js"></script>
 <script src="js/leaflet-hash.js"></script>
 <script src="js/Autolinker.min.js"></script>
-<script src="js/rbush.min.js"></script>
-<script src="js/labelgun.min.js"></script>
-<script src="js/labels.js"></script>
-<script src="js/leaflet.photon.js"></script>
-<script src="data/valles_2.js"></script>
+
+<script src="data/valle_2.js"></script>
 
 <script>
-var map = L.map('map', {
-    zoomControl:false,
-    maxZoom:28,
-    minZoom:1
-}).fitBounds([
-    [32.43109627748314,3.6314768400864588],
-    [32.52302859879061,3.84306408019752]
-]);
+
+/* إنشاء الخريطة */
+
+var map = L.map('map',{
+zoomControl:false,
+maxZoom:28,
+minZoom:1
+}).fitBounds([[32.477281626209376,3.612827943275947],
+[32.53431583756227,3.734998850228754]]);
 
 var hash = new L.Hash(map);
 
-/* ===== حذف Attribution ===== */
+/* حذف Attribution */
+
 map.attributionControl.setPrefix('');
 map.attributionControl.remove();
 
-/* ===== Controls ===== */
-L.control.zoom({position: 'topleft'}).addTo(map);
-L.control.locate({locateOptions: {maxZoom: 19}}).addTo(map);
+/* أدوات التحكم */
 
-/* ===== Google Terrain ===== */
+L.control.zoom({position:'topleft'}).addTo(map);
+L.control.locate({locateOptions:{maxZoom:19}}).addTo(map);
+
+/* Google Terrain */
+
 map.createPane('pane_GoogleTerrain_0');
 map.getPane('pane_GoogleTerrain_0').style.zIndex = 400;
 
 var layer_GoogleTerrain_0 = L.tileLayer(
-    'https://mt1.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
-    pane: 'pane_GoogleTerrain_0',
-    opacity: 1.0,
-    attribution: '',
-    minZoom: 1,
-    maxZoom: 28
+'https://mt1.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
+pane:'pane_GoogleTerrain_0',
+opacity:1,
+attribution:'',
+minZoom:1,
+maxZoom:28
 });
+
 map.addLayer(layer_GoogleTerrain_0);
 
-/* ===== Google Satellite ===== */
+/* Google Satellite */
+
 map.createPane('pane_GoogleSatellite_1');
 map.getPane('pane_GoogleSatellite_1').style.zIndex = 401;
 
 var layer_GoogleSatellite_1 = L.tileLayer(
-    'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-    pane: 'pane_GoogleSatellite_1',
-    opacity: 1.0,
-    attribution: '',
-    minZoom: 1,
-    maxZoom: 28
+'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
+pane:'pane_GoogleSatellite_1',
+opacity:1,
+attribution:'',
+minZoom:1,
+maxZoom:28
 });
+
 map.addLayer(layer_GoogleSatellite_1);
 
-/* ===== Valleys ===== */
-function style_valles_2_0() {
-    return {
-        pane: 'pane_valles_2',
-        opacity: 1,
-        color: 'rgba(24,167,237,1.0)',
-        weight: 2,
-        fillOpacity: 0,
-        interactive: true
-    };
+/* Style valleys */
+
+function style_valle_2(){
+return{
+color:'#2893ff',
+weight:1,
+opacity:1
+}
 }
 
-map.createPane('pane_valles_2');
-map.getPane('pane_valles_2').style.zIndex = 402;
+/* طبقة الأودية */
 
-var layer_valles_2 = new L.geoJson(json_valles_2, {
-    pane: 'pane_valles_2',
-    style: style_valles_2_0,
-    interactive: true
+map.createPane('pane_valle_2');
+map.getPane('pane_valle_2').style.zIndex = 402;
+
+var layer_valle_2 = new L.geoJson(json_valle_2,{
+pane:'pane_valle_2',
+style:style_valle_2
 });
-map.addLayer(layer_valles_2);
 
-/* ===== Flood raster ===== */
+map.addLayer(layer_valle_2);
+
+/* طبقة الفيضان */
+
 map.createPane('pane_inondation_3');
 map.getPane('pane_inondation_3').style.zIndex = 403;
 
-var img_inondation_3 = 'data/inondation_3.png';
-var img_bounds_inondation_3 = [
-    [32.37165228901085,3.009257966550672],
-    [32.807760862073884,3.8873520774093526]
+var img_inondation_3='data/inondation_3.png';
+
+var img_bounds_inondation_3=[
+[32.39375720100701,3.5091501062709876],
+[32.60726579369081,3.887391704138747]
 ];
 
 var layer_inondation_3 = new L.imageOverlay(
-    img_inondation_3,
-    img_bounds_inondation_3,
-    {pane: 'pane_inondation_3'}
+img_inondation_3,
+img_bounds_inondation_3,
+{pane:'pane_inondation_3'}
 );
+
 map.addLayer(layer_inondation_3);
 
-/* ===== Layers control ===== */
-var overlaysTree = [
-    {label: "Inondation", layer: layer_inondation_3},
-    {label: '<img src="legend/valles_2.png" /> Vallées', layer: layer_valles_2},
-    {label: "Google Satellite", layer: layer_GoogleSatellite_1},
-    {label: "Google Terrain", layer: layer_GoogleTerrain_0}
+/* التحكم في الطبقات */
+
+var overlaysTree=[
+
+{label:"Inondation",layer:layer_inondation_3},
+
+{label:'Vallées',layer:layer_valle_2},
+
+{label:"Google Satellite",layer:layer_GoogleSatellite_1},
+
+{label:"Google Terrain",layer:layer_GoogleTerrain_0}
+
 ];
 
-L.control.layers.tree(null, overlaysTree, {collapsed: true}).addTo(map);
+L.control.layers.tree(null,overlaysTree,{collapsed:true}).addTo(map);
 
-/* ===== Legend (مصغّر للهاتف) ===== */
-var legend = L.control({ position: 'bottomright' });
+/* ===== Legend ===== */
 
-legend.onAdd = function () {
+var legend = L.control({position:'bottomright'});
 
-    var div = L.DomUtil.create('div', 'legend');
+legend.onAdd = function(){
 
-    /* تصغير الإطار مباشرة من HTML */
-    div.style.fontSize = "10px";
-    div.style.padding = "4px 6px";
-    div.style.lineHeight = "14px";
-    div.style.maxWidth = "140px";
+var div = L.DomUtil.create('div','legend');
 
-    var grades = [0.000976, 4.273702, 8.546274, 12.819528];
-    var colors = ['#e6f0fa', '#87cefa', '#4682b4', '#000080'];
+div.innerHTML='<b>Profondeur d’inondation (m)</b><br>';
 
-    div.innerHTML = '<b>Profondeur d’inondation (m)</b><br>';
+var grades=[1,4,5,6,7.90];
 
-    for (var i = 0; i < grades.length; i++) {
+var colors=[
+'#4292C6',
+'#2171B5',
+'#08519C',
+'#08306B'
+];
 
-        div.innerHTML +=
-            '<i style="background:' + colors[i] +
-            '; width:12px; height:12px; margin-right:5px;"></i> ' +
-            grades[i].toFixed(1) +
-            (grades[i + 1]
-            ? ' – ' + grades[i + 1].toFixed(1) + '<br>'
-            : '+');
-    }
+for (var i=0;i<grades.length-1;i++){
 
-    return div;
+div.innerHTML +=
+'<i style="background:'+colors[i]+'"></i> '
++grades[i]+' – '+grades[i+1]+'<br>';
+
+}
+
+return div;
+
 };
 
 legend.addTo(map);
+
 </script>
+
 </body>
 </html>
