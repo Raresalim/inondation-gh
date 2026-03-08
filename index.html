@@ -42,12 +42,31 @@ margin-right: 5px;
 opacity: 0.9;
 }
 
+/* ===== Attribution صغير للهاتف ===== */
+
+.map-credit{
+position:absolute;
+bottom:3px;
+left:5px;
+font-size:9px;
+color:#444;
+background:rgba(255,255,255,0.7);
+padding:2px 4px;
+border-radius:3px;
+z-index:9999;
+pointer-events:none;
+font-family:sans-serif;
+}
+
 </style>
 </head>
 
 <body>
 
 <div id="map"></div>
+
+<!-- attribution صغير -->
+<div class="map-credit">© Google | Leaflet</div>
 
 <script src="js/leaflet.js"></script>
 <script src="js/L.Control.Layers.Tree.min.js"></script>
@@ -70,7 +89,7 @@ minZoom:1
 
 var hash = new L.Hash(map);
 
-/* حذف Attribution */
+/* حذف Attribution الافتراضي */
 
 map.attributionControl.setPrefix('');
 map.attributionControl.remove();
